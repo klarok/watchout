@@ -17,8 +17,8 @@ let enemies = d3.range(10).map(i => {
 	return { 
 		i: i,
 		r: random(15, 10),
-		x: random(svg[0][0].clientWidth),
-		y: random(svg[0][0].clientHeight),
+		// x: random(svg[0][0].clientWidth),
+		// y: random(svg[0][0].clientHeight),
 		fill: `rgb(${random(255)}, ${random(255)}, ${random(255)})`
 	}
 });
@@ -32,10 +32,22 @@ function spawn(data) {
 		.data(data);
 
 	circle = circle.enter().append('circle')
-			.style('fill', d => d.fill)
-			.attr('r', d => d.r)
-			.attr('cx', d => d.x)
-			.attr('cy', d => d.y);
+			.attr('fill', d => d.fill)
+			.attr('r', d => d.r);
+			// .attr('cx', d => d.x)
+			// .attr('cy', d => d.y);
+	circle.each(function() {
+		updateLocation(d3.select(this));
+		// d3.select(this)
+		// 	.attr('cx', random(svg[0][0].clientWidth))
+		// 	.attr('cy', random(svg[0][0].clientHeight));
+	});
+}
+
+function updateLocation(selection) {
+	selection
+			.attr('cx', random(svg[0][0].clientWidth))
+			.attr('cy', random(svg[0][0].clientHeight));
 }
 
 spawn(enemies);
