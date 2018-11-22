@@ -2,7 +2,6 @@
 body {
 }
 .board {
-	border: solid 10px #9aefb4;
 	box-sizing: content-box;
 }
 /* Note: an asteroid image is included in this repo.
