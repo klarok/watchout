@@ -1,8 +1,36 @@
 /* your beautiful css styling goes here! */
 body {
+	font-family: 'Oswald', sans-serif;
+	display: flex;
 }
+
+/**************** GAMEBOARD *****************/
 .board {
 	box-sizing: content-box;
+	display: inline-block;
+	order: 0;
+}
+.board svg {
+	margin: 20px;
+}
+
+.active {
+	border: solid 3px magenta;
+}
+
+/**************** SCOREBOARD ****************/
+.scoreboard {
+	background-color: #;
+	padding: 10px;
+	box-sizing: content-box;
+	display: flex;
+	order: 1;
+}
+.scoreboard div {
+	box-sizing: content-box;
+	/*border: solid 1px #ef822b;*/
+	display: inline-block;
+	margin:10px;
 }
 /* Note: an asteroid image is included in this repo.
 Feel free to use it if you like. */
