@@ -75,28 +75,19 @@ let place = function(data) {
 			.attr('width', d => d.width)
 			.attr('height', d => d.height)
 			.style('fill', d => d.fill)
-			.attr('x', 100)
-			.attr('y', 100)
-			.call(d3.drag()
-					.on('start', dragStarted)
-					.on('drag', dragged)
-					.on('end', dragEnded));
+			.attr('x', 290)
+			.attr('y', 240)
+			.call(drag);
 };
 
-function dragStarted(d) {
-	d3.select(this).classed('active', true);
-	console.log('started dragging');
-}
-function dragged(d) {
-	d3.select(this)
-		.attr('x', d.x = d3.event.x)
-		.attr('y', d.y = d3.event.y);
-	console.log('dragging');
-}
-function dragEnded(d) {
-	d3.select(this).classed('active', false);
-}
+let drag = d3.behavior.drag()
+		.on('drag', dragMove);
 
+function dragMove(d) {
+	d3.select(this)
+			.attr('x', d.x = d3.event.x)
+			.attr('y', d.y = d3.event.y);
+}
 
 /////// HELPERS ///////////////////////////////////////
 
@@ -110,10 +101,10 @@ let randomColor = function(max = 255, min) {
 
 /////// MAIN ///////////////////////////////////////
 
-let enemyData = generateEnemyData(30);
-// let enemies = spawn(enemyData);
+let enemyData = generateEnemyData(10);
+let enemies = spawn(enemyData);
 let player = place(playerData);
-// setInterval(() => mobilize(enemies), 1000);
+setInterval(() => mobilize(enemies), 1000);
 // let scoreTimer = d3.timer(function(elapsed) {
 // 	d3.select('.current span')
 // 		.text(elapsed);
