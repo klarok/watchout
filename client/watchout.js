@@ -76,7 +76,6 @@ function processCollision() {
 	let curr = d3.select('.current span');
 	let cols = d3.select('.collisions span');
 	high.text(Math.max(parseInt(high.text()), parseInt(curr.text())));
-	console.log(cols.text());
 	cols.text(parseInt(cols.text()) + 1);
 	setScoreTimer();
 }

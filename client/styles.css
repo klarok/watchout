@@ -35,3 +35,17 @@ body {
 /* Note: an asteroid image is included in this repo.
 Feel free to use it if you like. */
 
+/**************** PIECES ****************/
+.enemy {
+	animation: 2s infinite alternate colorShift;
+}
+
+@keyframes colorShift {
+	0% {
+		/*fill: #defb90;*/
+	}
+
+	100% {
+		fill: #2109ac;
+	}
+}
