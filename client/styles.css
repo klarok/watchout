@@ -23,13 +23,13 @@ body {
 	background-color: #;
 	padding: 10px;
 	box-sizing: content-box;
-	display: flex;
+	/*display: flex;*/
 	order: 1;
 }
 .scoreboard div {
 	box-sizing: content-box;
 	/*border: solid 1px #ef822b;*/
-	display: inline-block;
+	/*display: inline-block;*/
 	margin:10px;
 }
 /* Note: an asteroid image is included in this repo.

@@ -20,7 +20,7 @@ let generateEnemyData = function(num) {
 		return { 
 			i: i,
 			r: random(15, 10),
-			fill: randomColor(undefined, 70)
+			fill: '#defb90'//randomColor(undefined, 70)
 		}
 	});
 };
@@ -52,41 +52,71 @@ let generateLocation = function(selection) {
 let mobilize = function(selection) {
 	selection
 		.transition()
-			.duration(1000)
+			.duration(2000)
 			.attr('cx', () => random(svg[0][0].clientWidth))
-			.attr('cy', () => random(svg[0][0].clientHeight));
+			.attr('cy', () => random(svg[0][0].clientHeight))
+			.tween('collision', (datum, index) => {
+				let enemy = selection.filter((d, i) => i === index);
+				return () => detectCollision(enemy);
+			});
+}
+
+function detectCollision(enemy) { //Custom tween to check for collisions
+	let radii = parseInt(enemy.attr('r')) + parseInt(player.attr('r'));
+	let xDiff = enemy.attr('cx') - player.attr('cx');
+	let yDiff = enemy.attr('cy') - player.attr('cy');
+	let distance = Math.sqrt(Math.pow(xDiff, 2) + Math.pow(yDiff, 2));
+	if (radii > distance) {
+		processCollision();
+	}
+}
+
+function processCollision() {
+	let high = d3.select('.highscore span');
+	let curr = d3.select('.current span');
+	let cols = d3.select('.collisions span');
+	high.text(Math.max(parseInt(high.text()), parseInt(curr.text())));
+	console.log(cols.text());
+	cols.text(parseInt(cols.text()) + 1);
+	setScoreTimer();
 }
 
 
 /////// PLAYER ////////////////////////////////////////
 
 let playerData = [{
-	width: 20,
-	height: 20,
-	fill: 'black',
-	stroke: 'red'
+	radius: 12,
+	fill: '#f7a000',
+	stroke: '#af4500'
 }];
 
 let place = function(data) {
-	return svg.selectAll('rect')
+	return svg.selectAll('.player')
 		.data(data)
-		.enter().append('rect')
+		.enter().append('circle')
 			.classed('player', true)
-			.attr('width', d => d.width)
-			.attr('height', d => d.height)
+			.attr('r', d => d.radius)
 			.style('fill', d => d.fill)
-			.attr('x', 290)
-			.attr('y', 240)
+			.style('stroke', d => d.stroke)
+			.attr('cx', 300)
+			.attr('cy', 250)
 			.call(drag);
 };
 
 let drag = d3.behavior.drag()
 		.on('drag', dragMove);
 
-function dragMove(d) {
-	d3.select(this)
-			.attr('x', d.x = d3.event.x)
-			.attr('y', d.y = d3.event.y);
+function dragMove(d) { 
+	//Keep player from falling off the board
+	let p = d3.select(this);
+	//d3.select(this)
+	let dxMax = dimensions.width - p.attr('cx');
+	let dyMax = dimensions.height - p.attr('cy');
+	p
+			// .attr('cx', d.x = Math.min(d3.event.x, dxMax))
+			// .attr('cy', d.y = Math.min(d3.event.y, dyMax));
+			.attr('cx', d.x = d3.event.x)
+			.attr('cy', d.y = d3.event.y);
 }
 
 /////// HELPERS ///////////////////////////////////////
@@ -99,13 +129,30 @@ let randomColor = function(max = 255, min) {
 }
 
 
+/////// SCORING ///////////////////////////////////////
+
+function setScoreTimer() {
+	let curr = d3.select('.current span');
+	if (scoreTimer !== null) {
+		clearInterval(scoreTimer);
+		score = 0;	
+		curr.text(score);
+	}
+	scoreTimer = setInterval(() => {
+		score += 1;
+		curr.text(score);
+	}, 500);
+
+}
+
+
 /////// MAIN ///////////////////////////////////////
 
-let enemyData = generateEnemyData(10);
+let enemyData = generateEnemyData(1);
 let enemies = spawn(enemyData);
 let player = place(playerData);
 setInterval(() => mobilize(enemies), 1000);
-// let scoreTimer = d3.timer(function(elapsed) {
-// 	d3.select('.current span')
-// 		.text(elapsed);
-// }, 100)
+
+let score = 0;
+let scoreTimer = null;
+setScoreTimer();
